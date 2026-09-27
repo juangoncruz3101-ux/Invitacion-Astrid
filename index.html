@@ -14,41 +14,40 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            overflow-x: hidden;
+            overflow: hidden;
         }
         .card {
             background: #fffdf0;
             padding: 25px;
             border-radius: 24px;
             box-shadow: 0 12px 30px rgba(0,0,0,0.15);
-            max-width: 420px;
+            max-width: 400px;
             width: 100%;
             text-align: center;
-            border: 3px solid #000; /* Estilo caricatura/borde marcado */
-            position: relative;
+            border: 3px solid #000; /* Estilo marcado tipo cómic */
+            box-sizing: border-box;
         }
         .tag-step {
             background: #ffe6a3;
             border: 2px solid #000;
             border-radius: 15px;
             display: inline-block;
-            padding: 2px 15px;
+            padding: 4px 15px;
             font-size: 0.85rem;
             font-weight: bold;
             margin-bottom: 15px;
             text-transform: uppercase;
         }
-        h2 { color: #000; font-size: 1.6rem; margin: 10px 0; line-height: 1.3; }
+        h2 { color: #000; font-size: 1.5rem; margin: 10px 0; line-height: 1.3; }
         p { font-size: 1.05rem; color: #333; margin-bottom: 15px; }
         
         .btn-container {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 15px;
+            gap: 20px;
             margin-top: 25px;
-            min-height: 120px;
-            position: relative;
+            height: 80px;
         }
         button {
             padding: 12px 25px;
@@ -58,17 +57,16 @@
             border: 2px solid #000;
             cursor: pointer;
             box-shadow: 3px 3px 0px #000;
-            transition: transform 0.1s ease, background-color 0.2s;
+            transition: background-color 0.2s;
         }
-        button:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0px #000; }
         
-        #btnSi { background-color: #a3fca3; color: #000; z-index: 10; }
-        #btnNo { background-color: #fca3a3; color: #000; }
+        #btnSi { background-color: #a3fca3; color: #000; }
+        #btnNo { background-color: #fca3a3; color: #000; transition: all 0.2s ease; }
         
         .step { display: none; }
         .step.active { display: block; }
         
-        /* Cuadrículas de opciones */
+        /* Cuadrícula de comida y bebidas */
         .grid-options {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -81,7 +79,7 @@
             border-radius: 12px;
             padding: 10px 5px;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: bold;
             box-shadow: 2px 2px 0px #000;
             display: flex;
@@ -92,33 +90,32 @@
         .option-box span { font-size: 1.6rem; }
         .option-box.selected {
             background: #b4c6fc;
-            transform: translate(1px, 1px);
             box-shadow: 1px 1px 0px #000;
         }
         
         input, select {
-            width: 85%;
+            width: 90%;
             padding: 10px;
             margin: 8px 0;
             border-radius: 10px;
             border: 2px solid #000;
             font-size: 1rem;
             font-weight: bold;
+            box-sizing: border-box;
         }
-        .next-btn { background-color: #ffe600; color: #000; margin-top: 15px; width: 85%; }
+        .next-btn { background-color: #ffe600; color: #000; margin-top: 15px; width: 90%; }
         
-        /* Animaciones y elementos de gatitos */
         .cat-container { font-size: 70px; margin: 15px 0; height: 90px; display: flex; justify-content: center; align-items: center; }
         .jumping { animation: jump 0.6s infinite alternate; }
-        @keyframes jump { 0% { transform: translateY(0); } 100% { transform: translateY(-20px); } }
+        @keyframes jump { 0% { transform: translateY(0); } 100% { transform: translateY(-15px); } }
         
-        .error-msg { color: #ff4d4d; font-size: 0.9rem; font-weight: bold; display: none; margin-top: 5px; }
+        .info-msg { color: #555; font-size: 0.9rem; font-weight: bold; margin-top: 5px; background: #fff4ca; padding: 5px; border-radius: 8px; border: 1px dashed #000; }
     </style>
 </head>
 <body>
 
     <div class="card">
-        <!-- PASO 1: PREGUNTA INICIAL (ESTILO VIDEO) -->
+        <!-- PASO 1: PREGUNTA INICIAL -->
         <div id="step1" class="step active">
             <span class="tag-step">Pregunta Seria</span>
             <div class="cat-container" id="memeGato">🥺</div>
@@ -129,25 +126,25 @@
             </div>
         </div>
 
-        <!-- PASO 2: CUÁNDO (RESTRICCIONES CONFIGURADAS) -->
+        <!-- PASO 2: SELECCIÓN DE DÍA Y HORA -->
         <div id="step2" class="step">
             <span class="tag-step">Paso 1</span>
             <div class="cat-container jumping">😺🎉</div>
             <h2>¡Listo! El plan principal lo armo yo...</h2>
             <p>Pero tú elige las siguientes opciones:</p>
-            <p style="font-weight: bold; color: #d4af37;">1 - Elige el día y la hora:</p>
+            <p style="font-weight: bold; color: #654321;">1 - Elige el día y la hora:</p>
             
-            <!-- Calendario inicia obligatoriamente el 01/10/2026 -->
+            <!-- Inicia el 01/10/2026 -->
             <input type="date" id="fechaCita" min="2026-10-01" value="2026-10-01" onchange="validarHorario()">
             <select id="horaCita">
-                <!-- Se rellena dinámicamente con JavaScript -->
+                <!-- Se rellena con javascript automáticamente -->
             </select>
-            <div class="error-msg" id="errorHora"></div>
+            <div class="info-msg" id="errorHora"></div>
             
-            <button class="next-btn" onclick="pasarAlPaso3()">Siguiente ➔</button>
+            <button class="next-btn" onclick="nextStep(3)">Siguiente ➔</button>
         </div>
 
-        <!-- PASO 3: COMIDA REEMPLAZADA -->
+        <!-- PASO 3: SELECCIÓN DE COMIDA -->
         <div id="step3" class="step">
             <span class="tag-step">Paso 2</span>
             <div class="cat-container">🐱🍕</div>
@@ -166,7 +163,7 @@
             <button class="next-btn" onclick="nextStep(4)">Siguiente ➔</button>
         </div>
 
-        <!-- PASO 4: BEBIDAS VARIADAS -->
+        <!-- PASO 4: SELECCIÓN DE BEBIDA -->
         <div id="step4" class="step">
             <span class="tag-step">Paso 3</span>
             <div class="cat-container">🐱🥂</div>
@@ -182,16 +179,16 @@
             <button class="next-btn" onclick="generarResumen()">Confirmar Plan ➔</button>
         </div>
 
-        <!-- PASO 5: CONFIRMACIÓN FINAL -->
+        <!-- PASO 5: RESUMEN FINAL -->
         <div id="step5" class="step">
             <span class="tag-step">Confirmado</span>
             <div class="cat-container">🐱🚗💨</div>
             <h2>¡Trato hecho, Astrid! 🎉</h2>
             <p>Ya quedó todo anotado para nuestro día:</p>
-            <h3 id="resumenFecha" style="background: #ffe6a3; padding: 10px; border-radius: 10px; border: 2px solid #000;"></h3>
+            <h3 id="resumenFecha" style="background: #ffe6a3; padding: 10px; border-radius: 10px; border: 2px solid #000; font-size: 1.1rem;"></h3>
             <p>Comida: <strong id="resumenComida"></strong></p>
             <p>Bebida: <strong id="resumenBebida"></strong></p>
-            <p style="font-size: 0.9rem; color: #555; margin-top: 15px; font-style: italic;">¡Tómale captura a esto y envíamelo! 💛</p>
+            <p style="font-size: 0.9rem; color: #555; margin-top: 20px; font-style: italic;">¡Tómale captura a esto y envíamelo! 💛</p>
         </div>
     </div>
 
@@ -201,8 +198,7 @@
         let escalaSi = 1;
         let conteoNo = 0;
         
-        // Emojis de gatitos simulando las expresiones tristes del video
-        const memesTristes = ["😾", "😿", "🐱💢", "😭", "🐈🐾", "💤"];
+        const memesTristes = ["😾", "😿", "🐱💢", "😭", "🙀", "💔"];
 
         function accionNo() {
             conteoNo++;
@@ -210,19 +206,26 @@
             const btnSi = document.getElementById('btnSi');
             const memeGato = document.getElementById('memeGato');
             
-            // 1. Hace crecer el botón SÍ exponencialmente
-            escalaSi += 0.3;
+            // Crece el botón SÍ
+            escalaSi += 0.25;
             btnSi.style.transform = `scale(${escalaSi})`;
             
-            // 2. Cambia la expresión del gatito
+            // Cambia el emoji de gato
             memeGato.innerText = memesTristes[conteoNo % memesTristes.length];
             
-            // 3. Mueve el botón NO de forma aleatoria por la pantalla
-            const x = Math.random() * (window.innerWidth - btnNo.clientWidth - 40);
-            const y = Math.random() * (window.innerHeight - btnNo.clientHeight - 40);
-            btnNo.style.position = 'fixed';
-            btnNo.style.left = x + 'px';
-            btnNo.style.top = y + 'px';
+            // Mueve el botón NO dentro de la zona de botones de forma segura
+            const randomX = (Math.random() - 0.5) * 160;
+            const randomY = (Math.random() - 0.5) * 80;
+            btnNo.style.transform = `translate(${randomX}px, ${randomY}px)`;
         }
 
         function irAlPaso2() {
+            nextStep(2);
+            validarHorario();
+        }
+
+        function nextStep(stepNumber) {
+            document.querySelectorAll('.step').forEach(step => step.classList.remove('active'));
+            document.getElementById('step' + stepNumber).classList.add('active');
+        }
+
