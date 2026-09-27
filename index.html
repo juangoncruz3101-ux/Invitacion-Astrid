@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¿Salimos? 💛</title>
+    <style>
+        body {
+            background-color: #fffdf0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(24d, 214, 0, 0.15);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            border: 2px solid #fceb92;
+            position: relative;
+        }
+        h2 { color: #d4af37; font-size: 1.8rem; margin-bottom: 10px; }
+        p { font-size: 1.1rem; color: #555; }
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+            position: relative;
+            height: 50px;
+        }
+        button {
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 25px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        #btnSi { background-color: #ffe600; color: #4a4a4a; }
+        #btnNo { background-color: #ff4d4d; color: white; position: absolute; right: 50px; }
+        .step { display: none; }
+        .step.active { display: block; }
+        .grid-food {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin: 20px 0;
+        }
+        .food-option {
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1rem;
+            background: #fafafa;
+        }
+        .food-option.selected {
+            background: #fff9d6;
+            border-color: #ffe600;
+            font-weight: bold;
+        }
+        input, select {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+        }
+        .next-btn { background-color: #ffe600; color: #4a4a4a; margin-top: 15px; }
+        .gif { font-size: 60px; margin: 15px 0; animation: bounce 2s infinite; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <!-- PASO 1: LA PREGUNTA -->
+        <div id="step1" class="step active">
+            <div class="gif">🐱👋</div>
+            <h2>¿Irías a una cita conmigo, Astrid?</h2>
+            <p>Piénsalo bien... 😉</p>
+            <div class="btn-container">
+                <button id="btnSi" onclick="nextStep(2)">Sí</button>
+                <button id="btnNo" onmouseover="moverBotonNo()" onclick="moverBotonNo()">No</button>
+            </div>
+        </div>
+
+        <!-- PASO 2: CUÁNDO -->
+        <div id="step2" class="step">
+            <div class="gif">📅✨</div>
+            <h2>¡Sabiá que dirías que sí! 🥰</h2>
+            <p>¿Qué día y hora te queda mejor?</p>
+            <!-- Configurado a partir del 1 de Octubre de 2026 -->
+            <input type="date" id="fechaCita" min="2026-10-01" value="2026-10-01">
+            <input type="time" id="horaCita" value="19:00">
+            <br>
+            <button class="next-btn" onclick="nextStep(3)">Siguiente ➔</button>
+        </div>
+
+        <!-- PASO 3: QUÉ COMER -->
+        <div id="step3" class="step">
+            <div class="gif">🍕🍣</div>
+            <h2>¿Qué se te antoja comer?</h2>
+            <p>Elige tu opción favorita:</p>
+            <div class="grid-food">
+                <div class="food-option" onclick="selectFood(this, 'Pizza 🍕')">Pizza 🍕</div>
+                <div class="food-option" onclick="selectFood(this, 'Sushi 🍣')">Sushi 🍣</div>
+                <div class="food-option" onclick="selectFood(this, 'Hamburguesas 🍔')">Burgers 🍔</div>
+                <div class="food-option" onclick="selectFood(this, 'Café y Postre ☕🍰')">Café/Postre ☕</div>
+            </div>
+            <button class="next-btn" onclick="generarResumen()">Listo ➔</button>
+        </div>
+
+        <!-- PASO 4: CONFIRMACIÓN FINAL -->
+        <div id="step4" class="step">
+            <div class="gif">🚗💨🥳</div>
+            <h2>¡Trato hecho! 🎉</h2>
+            <p>Pasaré por ti. Agendado para:</p>
+            <h3 id="resumenFecha" style="color: #d4af37; margin: 5px 0;"></h3>
+            <p>Plan elegido: <strong id="resumenComida"></strong></p>
+            <p style="font-size: 0.9rem; color: #888; margin-top: 15px;">¡Tómale captura y envíamelo! 💛</p>
+        </div>
+    </div>
+
+    <script>
+        let comidaSeleccionada = "Lo que tú elijas 💛";
+
+        function moverBotonNo() {
+            const btnNo = document.getElementById('btnNo');
+            const card = document.querySelector('.card');
+            
+            // Calcula límites basados en la tarjeta para que no se salga de la pantalla
+            const x = Math.random() * (card.clientWidth - btnNo.clientWidth - 40) + 20;
+            const y = Math.random() * (card.clientHeight - btnNo.clientHeight - 100) + 50;
+            
+            btnNo.style.position = 'fixed';
+            const rect = card.getBoundingClientRect();
+            btnNo.style.left = (rect.left + x) + 'px';
+            btnNo.style.top = (rect.top + y) + 'px';
+        }
+
+        function nextStep(stepNumber) {
+            document.querySelectorAll('.step').forEach(step => step.classList.remove('active'));
+            document.getElementById('step' + stepNumber).classList.add('active');
+        }
+
+        function selectFood(element, comida) {
+            document.querySelectorAll('.food-option').forEach(opt => opt.classList.remove('selected'));
+            element.classList.add('selected');
+            comidaSeleccionada = comida;
+        }
+
+        function generarResumen() {
+            const fechaRaw = document.getElementById('fechaCita').value;
+            const hora = document.getElementById('horaCita').value;
+            
+            // Formatear la fecha linda (DD/MM/AAAA)
+            const partes = fechaRaw.split('-');
+            const fechaFormateada = partes[2] + '/' + partes[1] + '/' + partes[0];
+
+            document.getElementById('resumenFecha').innerText = fechaFormateada + ' a las ' + hora;
+            document.getElementById('resumenComida').innerText = comidaSeleccionada;
+            
+            nextStep(4);
+        }
+    </script>
+</body>
+</html>
