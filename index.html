@@ -15,6 +15,7 @@
             align-items: center;
             min-height: 100vh;
             overflow: hidden;
+            box-sizing: border-box;
         }
         .card {
             background: #fffdf0;
@@ -24,8 +25,9 @@
             max-width: 400px;
             width: 100%;
             text-align: center;
-            border: 3px solid #000; /* Estilo marcado tipo cómic */
+            border: 3px solid #000; /* Estilo marcado tipo cómic del video */
             box-sizing: border-box;
+            position: relative;
         }
         .tag-step {
             background: #ffe6a3;
@@ -47,7 +49,8 @@
             align-items: center;
             gap: 20px;
             margin-top: 25px;
-            height: 80px;
+            height: 90px;
+            position: relative;
         }
         button {
             padding: 12px 25px;
@@ -57,16 +60,15 @@
             border: 2px solid #000;
             cursor: pointer;
             box-shadow: 3px 3px 0px #000;
-            transition: background-color 0.2s;
         }
         
-        #btnSi { background-color: #a3fca3; color: #000; }
-        #btnNo { background-color: #fca3a3; color: #000; transition: all 0.2s ease; }
+        #btnSi { background-color: #a3fca3; color: #000; transition: transform 0.1s ease; }
+        #btnNo { background-color: #fca3a3; color: #000; position: relative; z-index: 5; }
         
         .step { display: none; }
         .step.active { display: block; }
         
-        /* Cuadrícula de comida y bebidas */
+        /* Cuadrícula de comida y bebidas basada en tu imagen */
         .grid-options {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -86,36 +88,39 @@
             flex-direction: column;
             align-items: center;
             gap: 5px;
+            user-select: none;
         }
         .option-box span { font-size: 1.6rem; }
         .option-box.selected {
             background: #b4c6fc;
             box-shadow: 1px 1px 0px #000;
+            transform: translate(1px, 1px);
         }
         
         input, select {
-            width: 90%;
-            padding: 10px;
+            width: 100%;
+            padding: 12px;
             margin: 8px 0;
             border-radius: 10px;
             border: 2px solid #000;
             font-size: 1rem;
             font-weight: bold;
             box-sizing: border-box;
+            background-color: white;
         }
-        .next-btn { background-color: #ffe600; color: #000; margin-top: 15px; width: 90%; }
+        .next-btn { background-color: #ffe600; color: #000; margin-top: 15px; width: 100%; box-shadow: 3px 3px 0px #000; }
         
         .cat-container { font-size: 70px; margin: 15px 0; height: 90px; display: flex; justify-content: center; align-items: center; }
         .jumping { animation: jump 0.6s infinite alternate; }
         @keyframes jump { 0% { transform: translateY(0); } 100% { transform: translateY(-15px); } }
         
-        .info-msg { color: #555; font-size: 0.9rem; font-weight: bold; margin-top: 5px; background: #fff4ca; padding: 5px; border-radius: 8px; border: 1px dashed #000; }
+        .info-msg { color: #444; font-size: 0.9rem; font-weight: bold; margin-top: 10px; background: #fff4ca; padding: 8px; border-radius: 8px; border: 1px dashed #000; }
     </style>
 </head>
 <body>
 
     <div class="card">
-        <!-- PASO 1: PREGUNTA INICIAL -->
+        <!-- PASO 1: PREGUNTA INICIAL CON LOS DILEMAS DEL NO -->
         <div id="step1" class="step active">
             <span class="tag-step">Pregunta Seria</span>
             <div class="cat-container" id="memeGato">🥺</div>
@@ -126,25 +131,25 @@
             </div>
         </div>
 
-        <!-- PASO 2: SELECCIÓN DE DÍA Y HORA -->
+        <!-- PASO 2: SELECCIÓN DE DÍA Y HORA CON RESTRICCIONES DE HORARIOS -->
         <div id="step2" class="step">
             <span class="tag-step">Paso 1</span>
             <div class="cat-container jumping">😺🎉</div>
             <h2>¡Listo! El plan principal lo armo yo...</h2>
             <p>Pero tú elige las siguientes opciones:</p>
-            <p style="font-weight: bold; color: #654321;">1 - Elige el día y la hora:</p>
+            <p style="font-weight: bold; margin-bottom: 5px;">1 - Elige el día y la hora:</p>
             
-            <!-- Inicia el 01/10/2026 -->
+            <!-- Calendario configurado estrictamente a partir del 01/10/2026 -->
             <input type="date" id="fechaCita" min="2026-10-01" value="2026-10-01" onchange="validarHorario()">
             <select id="horaCita">
-                <!-- Se rellena con javascript automáticamente -->
+                <!-- Se rellena con JavaScript dinámicamente -->
             </select>
             <div class="info-msg" id="errorHora"></div>
             
             <button class="next-btn" onclick="nextStep(3)">Siguiente ➔</button>
         </div>
 
-        <!-- PASO 3: SELECCIÓN DE COMIDA -->
+        <!-- PASO 3: SELECCIÓN DE COMIDA (REEMPLAZADOS JAPONESA Y COREANA) -->
         <div id="step3" class="step">
             <span class="tag-step">Paso 2</span>
             <div class="cat-container">🐱🍕</div>
@@ -163,7 +168,7 @@
             <button class="next-btn" onclick="nextStep(4)">Siguiente ➔</button>
         </div>
 
-        <!-- PASO 4: SELECCIÓN DE BEBIDA -->
+        <!-- PASO 4: SELECCIÓN DE BEBIDAS SOLICITADAS -->
         <div id="step4" class="step">
             <span class="tag-step">Paso 3</span>
             <div class="cat-container">🐱🥂</div>
@@ -179,16 +184,16 @@
             <button class="next-btn" onclick="generarResumen()">Confirmar Plan ➔</button>
         </div>
 
-        <!-- PASO 5: RESUMEN FINAL -->
+        <!-- PASO 5: RESUMEN FINAL SIN ERRORES -->
         <div id="step5" class="step">
             <span class="tag-step">Confirmado</span>
             <div class="cat-container">🐱🚗💨</div>
             <h2>¡Trato hecho, Astrid! 🎉</h2>
             <p>Ya quedó todo anotado para nuestro día:</p>
-            <h3 id="resumenFecha" style="background: #ffe6a3; padding: 10px; border-radius: 10px; border: 2px solid #000; font-size: 1.1rem;"></h3>
-            <p>Comida: <strong id="resumenComida"></strong></p>
-            <p>Bebida: <strong id="resumenBebida"></strong></p>
-            <p style="font-size: 0.9rem; color: #555; margin-top: 20px; font-style: italic;">¡Tómale captura a esto y envíamelo! 💛</p>
+            <h3 id="resumenFecha" style="background: #ffe6a3; padding: 12px; border-radius: 12px; border: 2px solid #000; font-size: 1.05rem; line-height: 1.4;"></h3>
+            <p style="font-size: 1.1rem; margin-top: 15px;">Comida: <strong id="resumenComida"></strong></p>
+            <p style="font-size: 1.1rem;">Bebida: <strong id="resumenBebida"></strong></p>
+            <p style="font-size: 0.9rem; color: #555; margin-top: 25px; font-style: italic;">¡Tómale captura a esto y envíamelo! 💛</p>
         </div>
     </div>
 
@@ -206,26 +211,11 @@
             const btnSi = document.getElementById('btnSi');
             const memeGato = document.getElementById('memeGato');
             
-            // Crece el botón SÍ
-            escalaSi += 0.25;
+            // Incrementa el tamaño del botón SÍ de forma segura
+            escalaSi += 0.3;
             btnSi.style.transform = `scale(${escalaSi})`;
             
-            // Cambia el emoji de gato
+            // Alterna los emojis tristes del gatito
             memeGato.innerText = memesTristes[conteoNo % memesTristes.length];
             
-            // Mueve el botón NO dentro de la zona de botones de forma segura
-            const randomX = (Math.random() - 0.5) * 160;
-            const randomY = (Math.random() - 0.5) * 80;
-            btnNo.style.transform = `translate(${randomX}px, ${randomY}px)`;
-        }
-
-        function irAlPaso2() {
-            nextStep(2);
-            validarHorario();
-        }
-
-        function nextStep(stepNumber) {
-            document.querySelectorAll('.step').forEach(step => step.classList.remove('active'));
-            document.getElementById('step' + stepNumber).classList.add('active');
-        }
-
+            // Desplazamiento controlado en área segura para evitar congelamientos en móviles
